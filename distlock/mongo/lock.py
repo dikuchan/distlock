@@ -17,12 +17,12 @@ T = typing.TypeVar("T", bound="MongoLock")
 class MongoLock(BaseLock):
     def __init__(
         self,
-        _use_new: object,
+        _should_use_classmethod: object,
         collection: MotorCollection[Resource],
         session: MotorClientSession | None = None,
     ) -> None:
-        self.session = session
-        self.collection = collection
+        self._session = session
+        self._collection = collection
         self._initialized = False
 
     @classmethod
@@ -36,7 +36,7 @@ class MongoLock(BaseLock):
         return lock
 
     async def _create_indexes(self) -> None:
-        await self.collection.create_indexes(
+        await self._collection.create_indexes(
             indexes=[
                 pymongo.IndexModel(
                     "resource_id",
@@ -47,7 +47,7 @@ class MongoLock(BaseLock):
                 pymongo.IndexModel("lock.lock_id"),
                 pymongo.IndexModel("lock.expires_at"),
             ],
-            session=self.session,
+            session=self._session,
         )
 
     async def init(self) -> None:
@@ -68,7 +68,7 @@ class MongoLock(BaseLock):
             raise UninitializedError()
         now = datetime.datetime.now(pytz.UTC)
         try:
-            await self.collection.find_one_and_update(
+            await self._collection.find_one_and_update(
                 filter={
                     "resource_id": resource_id,
                     "$or": [
@@ -90,7 +90,7 @@ class MongoLock(BaseLock):
                 },
                 upsert=True,
                 return_document=True,
-                session=self.session,
+                session=self._session,
             )
         except pymongo.errors.DuplicateKeyError:
             return False
@@ -99,7 +99,7 @@ class MongoLock(BaseLock):
     async def unlock(self, resource_id: str, lock_id: str) -> None:
         if not self._initialized:
             raise UninitializedError()
-        response = await self.collection.find_one_and_update(
+        response = await self._collection.find_one_and_update(
             filter={
                 "resource_id": resource_id,
                 "lock.lock_id": lock_id,
@@ -115,7 +115,7 @@ class MongoLock(BaseLock):
                     ),
                 },
             },
-            session=self.session,
+            session=self._session,
         )
         if response is None:
             raise NoLockError()
