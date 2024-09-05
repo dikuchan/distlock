@@ -381,4 +381,4 @@ mongo = ["motor", "pymongo", "pytz"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "38c30e408dca367800845fa544d4ed150561ab988f138c32aa65dc61f7cbcd46"
+content-hash = "a5fc20cacc5b6bca55de8d3153b2186fe3a7f31f69a357ab4d77dc0207793935"

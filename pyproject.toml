@@ -13,12 +13,12 @@ packages = [
 python = "^3.10"
 
 # For `mongo`.
-pymongo = { version = "^4.8.0", optional = true }
 motor = { version = "^3.5.1", optional = true }
+pymongo = { version = "^4.8.0", optional = true }
 pytz = { version = "^2024.1", optional = true }
 
 [tool.poetry.extras]
-mongo = ["pymongo", "motor", "pytz"]
+mongo = ["motor", "pymongo", "pytz"]
 
 [tool.poetry.group.dev.dependencies]
 # For `mongo`.
