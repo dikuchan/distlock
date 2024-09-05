@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "distlock"
+version = "0.1.0"
+description = "Distributed lock for databases"
+authors = ["dikuchan <dikuchan@protonmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    {include = "distlock"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# For `mongo`.
+pymongo = { version = "^4.8.0", optional = true }
+motor = { version = "^3.5.1", optional = true }
+pytz = { version = "^2024.1", optional = true }
+
+[tool.poetry.extras]
+mongo = ["pymongo", "motor", "pytz"]
+
+[tool.poetry.group.dev.dependencies]
+# For `mongo`.
+mongomock-motor = "^0.0.31"
+
+mypy = "^1.8.0"
+pytest = "^8.0.2"
+pytest-asyncio = "^0.24.0"
+ruff = "^0.6.3"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.ruff]
+line-length = 120
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

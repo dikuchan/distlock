@@ -1,0 +1,10 @@
+version: "3.0"
+
+services:
+  distlock-mongo:
+    image: mongo:4.4.6-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: username
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
